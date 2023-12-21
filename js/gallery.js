@@ -65,7 +65,6 @@ const images = [
 ];
 
 const list = document.querySelector(".gallery");
-const listItem = document.querySelectorAll(".gallery-image");
 const markup = images
   .map(
     (images) => `<li class="gallery-item">
@@ -90,16 +89,18 @@ list.addEventListener("click", function (event) {
   }
   const instance = basicLightbox.create(
     `<div class="modal">
-    <img src="${event.target.dataset.source}" width="1112" height="640">
+    <img src="${event.target.dataset.source}" width="1112" height="640" alt="${event.target.alt}">
     </div>
     `
   );
   instance.show();
-  list.addEventListener("keydown", (event) => {
-    if (event.code === "Escape") {
-      instance.close();
-    }
-  });
+  list.addEventListener("keydown", onEscapeClose);
+  function onEscapeClose(event) {
+    if (event.code !== "Escape") {
+      return;
+    } else instance.close();
+    list.removeEventListener("keydown", onEscapeClose);
+  }
 });
 
 function blockDownload(event) {
